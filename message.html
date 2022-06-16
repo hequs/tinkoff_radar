@@ -1,6 +1,6 @@
 {%- for atm in atms -%}
-{%- if atm.available %}🟢
-{%- else %} 🔴
+{%- if atm.available -%}🟢
+{%- else -%}🔴
 {%- endif -%}
 #{{atm.id}} (
 {%- for limit in atm.limits -%}
