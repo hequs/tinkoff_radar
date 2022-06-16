@@ -1,0 +1,15 @@
+{
+    "sleep_time": 300,
+    "currencies": ["EUR"],
+    "bounds": {
+        "bottom_left": [55.663344, 37.440491],
+        "top_right": [55.825668, 37.789226]
+    },
+    "pois": [
+        { 
+            "name": "name", 
+            "location": [55.663344, 37.440491]
+        }
+    ],
+    "chat_id": 1
+}

@@ -1,0 +1,16 @@
+{%- for atm in atms -%}
+#{{atm.id}} (
+{%- for limit in atm.limits -%}
+    {%- if limit.currency == "EUR" -%}€
+    {%- elif limit.currency == "USD" -%}$
+    {%- endif -%}
+    {{limit.amount}}
+{%- endfor -%}
+) (
+{%- for poi in atm.pois -%}
+    {{poi.name}} - {{"%.2f"|format(poi.distance)}} km{% if not loop.last %}, {% endif %}
+{%- endfor -%}
+)
+<a href="https://yandex.ru/maps?text={{atm.address|urlencode}}">{{atm.address}}</a>
+
+{% endfor %}
