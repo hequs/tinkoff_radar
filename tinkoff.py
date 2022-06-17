@@ -89,7 +89,6 @@ def main(token, log_level, template_path, config_path):
     bounds = (config["bounds"]["bottom_left"], config["bounds"]["top_right"])
     
     def add_poi_distances(pois, atms):
-        print(pois)
         for atm in atms:
             _pois = [{"name": p["name"], "distance": haversine(atm["location"], p["location"])} for p in pois]
             atm.update({"pois": sorted(_pois, key=lambda p: p["distance"])})
