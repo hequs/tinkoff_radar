@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import json
 import logging
 import requests
@@ -92,13 +93,23 @@ def main(token, log_level, template_path, config_path):
         for atm in atms:
             _pois = [{"name": p["name"], "distance": haversine(atm["location"], p["location"])} for p in pois]
             atm.update({"pois": sorted(_pois, key=lambda p: p["distance"])})
-        
+
+    sent_text_hash = None
     while True:
         if atms := tinkoff_client.atms(config["currencies"], bounds):
+            logging.info("{} ATMs".format(len(atms)))
+
             add_poi_distances(config["pois"], atms)
             atms.sort(key=lambda a: (-a["limits"][0]["amount"], a["pois"][0]["distance"]))
-            telegram_client.send_text(template.render(atms=atms))
-            logging.info("{} ATMs".format(len(atms)))
+
+            text = template.render(atms=atms)
+            text_hash = hashlib.md5(text.encode("utf-8")).hexdigest()
+            if text_hash != sent_text_hash:
+                telegram_client.send_text(text)
+                sent_text_hash = text_hash
+                logging.info("Message sent to {}".format(config["chat_id"]))
+            else:
+                logging.info("Message omitted - nothing new")
         else:
             logging.info("No ATMs")    
         time.sleep(config["sleep_time"])    
